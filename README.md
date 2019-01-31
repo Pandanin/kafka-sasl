@@ -151,3 +151,34 @@ auto.create.topics.enable=false
 测试启动生产者  
 执行  
 `sh bin/kafka-console-producer.sh --broker-list 192.168.1.115:9092 --topic test --producer.config config/producer.properties`
+## 第20步
+启用kafka-manager,需要使用最新版本1.3.3.21
+## 第21步
+将my-jaas.conf移到kafa-manager的conf文件夹中  
+my-jaas.conf内容如下：  
+```
+KafkaClient {
+	org.apache.kafka.common.security.plain.PlainLoginModule required
+		username="admin"
+		password="admin";
+};
+
+Client {
+	org.apache.kafka.common.security.plain.PlainLoginModule required
+		username="admin"
+		password="admin";
+};
+```
+## 第22步
+修改kafa-manager的conf文件夹中的consumer.properties,  
+```
+security.protocol=SASL_PLAINTEXT
+sasl.mechanism=PLAIN
+```
+## 第23步
+修改kafa-manager的conf文件夹中的application.conf  
+`kafka-manager.consumer.properties.file=(上面修改的consumer.properties)`
+## 第24步
+启动kafka-manager  
+`bin/kafka-manager   Djava.security.auth.login.config=conf/my-jaas.conf -Dconfig.file=conf/application.conf`
+
